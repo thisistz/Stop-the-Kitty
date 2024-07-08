@@ -76,7 +76,8 @@ public class Portfolio : MonoBehaviour
     }
 
     public void BuyBackShort(float amount, int index){
-        buyPower -= amount * stocks.price;
+        if(buyPower >= amount * stocks.price){
+            buyPower -= amount * stocks.price;
         shortedShares -= amount;
         shortList.RemoveAt(index);
         print("bought back: " + amount);
@@ -85,6 +86,7 @@ public class Portfolio : MonoBehaviour
         t_shortedAmount.text = "0";
         shortAmount = 0;
         t_shortedStocks.text = Math.Round(shortedShares, 6).ToString("N") + " shares";
+        }
     }
     public void BuyStocks(){
         if (buyPower >= buyAmount * stocks.price)
@@ -99,7 +101,7 @@ public class Portfolio : MonoBehaviour
     }
 
     public void SellStocks(){
-        if (ownedShares > buyAmount)
+        if (ownedShares >= buyAmount)
         {
             buyPower += buyAmount * stocks.price;
             ownedShares -= buyAmount;

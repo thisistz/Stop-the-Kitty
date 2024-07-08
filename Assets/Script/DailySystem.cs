@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class DailySystem : MonoBehaviour
 {
+    public int dayCount = 1;
     Stocks stocks;
     // Start is called before the first frame update
     void Start()
