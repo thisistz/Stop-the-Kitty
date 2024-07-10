@@ -12,7 +12,7 @@ public class GeminiLLM : MonoBehaviour
     private static readonly HttpClient client = new HttpClient();
     TakeScreenshotAndSave screenshot;
 
-    float period = 0.0f;
+    float period = 0.0f, boughtPeriod = 0f;
     public SocialMedia socialMedia;
 
     public class ApiResponse
@@ -21,16 +21,14 @@ public class GeminiLLM : MonoBehaviour
         public string sentiment_score { get; set; }
     }
 
-    static async Task<Post> GetResponse()
+    static async Task<Post> GetResponse(string input)
     {
         var url = "https://stopthekitty.maxckm.com/api/v1/generate";
-        
-
         try
         {
             using (var formData = new MultipartFormDataContent())
             {
-                var prompt = "Your first task is WITHOUT using emojis, create an attention grabbing tweet under 80 characters about BBSE stock that contains strictly NO EMOJI and no hashtags, guessing about the future of the stock. Your second task is to check and remove all emojis in your response and store it as \"headline\" Your third task is to give that tweet a reasonable sentiment score that ranges between -1 to 1. You will output nothing other than this json format: {\"headline\":\"\"headline\"\",\"sentiment_score\":\"your_answer\"}";
+                var prompt = input;
             
                 formData.Add(new StringContent(prompt), "prompt");
 
@@ -40,6 +38,7 @@ public class GeminiLLM : MonoBehaviour
                     string base64Image = Convert.ToBase64String(imageBytes);
                     formData.Add(new StringContent(base64Image), "image");
                 }
+
                 var response = await client.PostAsync(url, formData);
                 response.EnsureSuccessStatusCode();
 
@@ -79,7 +78,8 @@ public class GeminiLLM : MonoBehaviour
             if (period > 4.0f)
             {
                 StartCoroutine(screenshot.TakeSnapShotAndSave());
-                Task<Post> getResponseTask = GetResponse();
+                Task<Post> getResponseTask = GetResponse(
+                    "Your first task is WITHOUT using emojis, create an attention grabbing tweet under 80 characters about BBSE stock that contains strictly NO EMOJI and no hashtags, guessing about the future of the stock. Your second task is to check and remove all emojis in your response and store it as \"headline\" Your third task is to give that tweet a reasonable sentiment score that ranges between -1 to 1. You will output nothing other than this json format: {\"headline\":\"\"headline\"\",\"sentiment_score\":\"your_answer\"}");
                 
                 yield return new WaitUntil(() => getResponseTask.IsCompleted);
 
@@ -92,6 +92,33 @@ public class GeminiLLM : MonoBehaviour
                 period = 0.0f;
             }
             period += UnityEngine.Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public IEnumerator BadPR()
+    {
+        int duration = 30;
+        while (duration > 0)
+        {
+            if (boughtPeriod > 3.0f)
+            {
+                StartCoroutine(screenshot.TakeSnapShotAndSave());
+                Task<Post> getResponseTask = GetResponse(
+                    "Your first task is WITHOUT using emojis, create an attention grabbing tweet under 80 characters about BBSE stock that contains strictly NO EMOJI and no hashtags, guessing negatively about the future of the stock. Your second task is to check and remove all emojis in your response and store it as \"headline\" Your third task is to give that tweet a reasonable sentiment score that ranges between -1 to 1. You will output nothing other than this json format: {\"headline\":\"\"headline\"\",\"sentiment_score\":\"your_answer\"}");
+                
+                yield return new WaitUntil(() => getResponseTask.IsCompleted);
+
+                if (getResponseTask.Result != null)
+                {
+                    socialMedia.posts.Add(getResponseTask.Result);
+                    socialMedia.Organize();
+                }
+
+                period = 0.0f;
+                duration --;
+            }
+            boughtPeriod += UnityEngine.Time.deltaTime;
             yield return null;
         }
     }

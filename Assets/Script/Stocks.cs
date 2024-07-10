@@ -40,13 +40,13 @@ public class Stocks : MonoBehaviour
             stockPrices.Add(price);
             float probabilty = 0;
             if(priceJump < 0){
-                probabilty = UnityEngine.Random.Range(priceJump, -priceJump/2);
+                probabilty = UnityEngine.Random.Range(1.5f * priceJump, -priceJump/1.2f);
             }
             else{
-                probabilty = UnityEngine.Random.Range(-priceJump/2, priceJump);
+                probabilty = UnityEngine.Random.Range(-priceJump/1.2f, priceJump);
             }
 
-            if(shortInfluencePeriod > 3.0f){
+            if(shortInfluencePeriod > 20.0f){
                 shortInfluence = 0f;
                 shortInfluencePeriod = 0;
             }
@@ -58,7 +58,7 @@ public class Stocks : MonoBehaviour
             }
 
             price += 10 * probabilty * probabilty * probabilty + logShort;
-
+            price = Mathf.Max(price, 0.01f);
             price = (float)Math.Round(price, 2);
             stockPrice.text = price.ToString("C");
             graph.ShowGraph(stockPrices);

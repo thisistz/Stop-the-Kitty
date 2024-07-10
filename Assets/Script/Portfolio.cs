@@ -25,14 +25,17 @@ public class Portfolio : MonoBehaviour
     public Transform shortLog;
     public GameObject prefab;
 
-    public TMP_Text t_buyPower, t_shortedStocks, t_ownedStocks, t_shortEstimate, t_buyEstimate;
+    public TMP_Text t_buyPower, t_shortedStocks, t_ownedStocks, t_shortEstimate, t_buyEstimate, t_PR;
     public TMP_InputField t_buyAmount, t_shortedAmount;
 
+    int pricePR = 50000;
     Stocks stocks;
+    GeminiLLM llm;
     // Start is called before the first frame update
     void Start()
     {
         stocks = (Stocks)FindObjectOfType(typeof(Stocks));
+        llm = (GeminiLLM)FindObjectOfType(typeof(GeminiLLM));
         t_shortedStocks.text = shortedShares.ToString("N") + " shares";
         
         OrganizeShortLog();
@@ -105,6 +108,7 @@ public class Portfolio : MonoBehaviour
         {
             buyPower += buyAmount * stocks.price;
             ownedShares -= buyAmount;
+            stocks.shortInfluence += shortAmount / 100000;
             t_ownedStocks.text = Math.Round(ownedShares, 6).ToString("N") + " shares";
             print("sold: " + buyAmount);
             t_buyAmount.text = "0";
@@ -127,5 +131,15 @@ public class Portfolio : MonoBehaviour
             print("amount: " + shorts.amount.ToString() + " price: " + shorts.shortPrice.ToString());
             y_offset -= 1;
         }
+    }
+
+    public void BuyPR(){
+        if (buyPower>= pricePR){
+            buyPower -= pricePR;
+            StartCoroutine(llm.BadPR());
+            pricePR += 10000;
+            t_PR.text = "Buy PR (" + pricePR.ToString() + ")";
+        }
+        
     }
 }
