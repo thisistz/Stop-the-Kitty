@@ -98,7 +98,7 @@ public class GeminiLLM : MonoBehaviour
 
     public IEnumerator BadPR()
     {
-        int duration = 30;
+        int duration = 15;
         while (duration > 0)
         {
             if (boughtPeriod > 3.0f)
