@@ -121,6 +121,7 @@ public class GeminiLLM : MonoBehaviour
             boughtPeriod += UnityEngine.Time.deltaTime;
             yield return null;
         }
+        yield break;
     }
 }
 

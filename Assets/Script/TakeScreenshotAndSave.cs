@@ -57,14 +57,16 @@ public class TakeScreenshotAndSave : MonoBehaviour
         Texture2D ss = new Texture2D(width, height, TextureFormat.RGB24, false);
         ss.ReadPixels(new Rect(startX, startY, width, height), 0, 0);
         ss.Apply();
+        /*
         Debug.Log("Start X : " + startX + " Start Y : " + startY);
         Debug.Log("Screen Width : " + Screen.width + " Screen Height : " + Screen.height);
         Debug.Log("Texture Width : " + width + " Texture Height : " + height);
+        */
         //Save the screenshot to disk
         byte[] byteArray = ss.EncodeToPNG();
         string savePath = Application.dataPath + "/ScreenshotSave.png";
         System.IO.File.WriteAllBytes(savePath, byteArray);
-        Debug.Log("Screenshot Path : " + savePath);
+        //Debug.Log("Screenshot Path : " + savePath);
         // Destroy texture to avoid memory leaks
         Destroy(ss);
     }

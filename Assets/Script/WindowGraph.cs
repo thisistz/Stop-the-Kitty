@@ -29,7 +29,7 @@ public class WindowGraph : MonoBehaviour
         circles.Add(gameObject);
     }
 
-    private void ClearGraph() {
+    public void ClearGraph() {
         foreach(GameObject c in circles) {
             Destroy(c);
         }
