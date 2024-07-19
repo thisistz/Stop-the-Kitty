@@ -16,12 +16,13 @@ public class Stocks : MonoBehaviour
     SocialMedia socialMedia;
     DailySystem dailySystem;
     List<Post> postRef = new List<Post>();
-    public bool paused = false;
+    public bool paused = true;
     // Start is called before the first frame update
     void Start()
     {
         socialMedia = (SocialMedia)FindObjectOfType(typeof(SocialMedia));
         dailySystem = (DailySystem)FindObjectOfType(typeof(DailySystem));
+        paused = true;
     }
 
     // Update is called once per frame
