@@ -70,6 +70,7 @@ public class DailySystem : MonoBehaviour
         foreach(Shorts s in portfolio.shortList){
             s.daysCD --;
         }
+        portfolio.OrganizeShortLog();
         portfolio.Payout();
         dayEndScreen.SetActive(false);
     }

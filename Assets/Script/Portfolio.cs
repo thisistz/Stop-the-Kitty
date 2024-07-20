@@ -117,7 +117,7 @@ public class Portfolio : MonoBehaviour
         }
     }
     
-    void OrganizeShortLog(){
+    public void OrganizeShortLog(){
         int y_offset = shortList.Count - 1;
         for(int i = shortLog.transform.childCount - 1; i >= 0; i--)
         {
@@ -128,6 +128,7 @@ public class Portfolio : MonoBehaviour
             log.GetComponent<RectTransform>().localPosition -=new Vector3(0, (y_offset * 20),0);
             log.transform.Find("amount").GetComponent<TMP_Text>().text = shorts.amount.ToString();
             log.transform.Find("price").GetComponent<TMP_Text>().text = shorts.shortPrice.ToString("0.00");
+            log.transform.Find("days").GetComponent<TMP_Text>().text = shorts.daysCD.ToString();
             
             print("amount: " + shorts.amount.ToString() + " price: " + shorts.shortPrice.ToString());
             y_offset -= 1;
