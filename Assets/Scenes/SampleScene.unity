@@ -1599,7 +1599,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Buy PR ($50,000)
+  m_text: Buy PR ($5,000,000)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3532,15 +3532,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfab77a07febb44608b580347f5dbb26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buyPower: 6000000
+  buyPower: 200000000
   shortLog: {fileID: 1246141533}
   prefab: {fileID: 7865481461682702762, guid: d1f491432c6de443188885204537b6fe, type: 3}
+  dividendRatio: 0.05
+  shortInterestRatio: 0.01
   t_buyPower: {fileID: 1198434187}
   t_shortedStocks: {fileID: 1169348359}
   t_ownedStocks: {fileID: 108596093}
   t_shortEstimate: {fileID: 2071308533}
   t_buyEstimate: {fileID: 698898144}
   t_PR: {fileID: 325386580}
+  t_endScreen: {fileID: 1212204672}
   t_buyAmount: {fileID: 238836547}
   t_shortedAmount: {fileID: 1391457562}
 --- !u!1 &956723434
@@ -4989,7 +4992,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 934986597}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.33333334
+  m_Size: 0.33333337
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

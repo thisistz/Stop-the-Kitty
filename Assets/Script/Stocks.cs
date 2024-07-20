@@ -71,6 +71,7 @@ public class Stocks : MonoBehaviour
         }
         else{
             dailySystem.EndDay();
+            marketTime = 0f;
             print("Day End");
         }
         

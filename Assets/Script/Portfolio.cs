@@ -24,11 +24,12 @@ public class Portfolio : MonoBehaviour
         new Shorts(50000000, 1.69f),};
     public Transform shortLog;
     public GameObject prefab;
+    public float dividendRatio = 0.1f, shortInterestRatio = 0.1f;
 
-    public TMP_Text t_buyPower, t_shortedStocks, t_ownedStocks, t_shortEstimate, t_buyEstimate, t_PR;
+    public TMP_Text t_buyPower, t_shortedStocks, t_ownedStocks, t_shortEstimate, t_buyEstimate, t_PR, t_endScreen;
     public TMP_InputField t_buyAmount, t_shortedAmount;
 
-    int pricePR = 50000;
+    int pricePR = 5000000;
     Stocks stocks;
     GeminiLLM llm;
     // Start is called before the first frame update
@@ -137,9 +138,28 @@ public class Portfolio : MonoBehaviour
         if (buyPower>= pricePR){
             buyPower -= pricePR;
             StartCoroutine(llm.BadPR());
-            pricePR += 10000;
-            t_PR.text = "Buy PR (" + pricePR.ToString() + ")";
+            pricePR += 1000000;
+            t_PR.text = "Buy PR (" + pricePR.ToString("C0") + ")";
         }
         
+    }
+
+    public void CalcPayout(){
+        float dividendPay = ownedShares * stocks.price * dividendRatio;
+        float shortInterest = shortedShares * stocks.price * shortInterestRatio;
+        t_endScreen.text = 
+                            "You shorted: " + shortedShares.ToString("N") + " shares" + "\n" +
+                            "You bought: " + ownedShares.ToString("N") + " shares" + "\n\n" +
+                            "Dividend: " + dividendPay.ToString("C") + "\n" +
+                            "Short interest due: " + shortInterest.ToString("C") + "\n\n" +
+                            "Keep up the good work.";
+    }
+
+    public void Payout(){
+        float dividendPay = ownedShares * stocks.price * dividendRatio;
+        float shortInterest = shortedShares * stocks.price * shortInterestRatio;
+
+        buyPower += dividendPay;
+        buyPower -= shortInterest;
     }
 }

@@ -52,6 +52,7 @@ public class DailySystem : MonoBehaviour
     public void EndDay(){
         //pause graph
         stocks.paused = true;
+        portfolio.CalcPayout();
         //disable trades
         dayEndScreen.SetActive(true);
         //record last price
@@ -69,7 +70,7 @@ public class DailySystem : MonoBehaviour
         foreach(Shorts s in portfolio.shortList){
             s.daysCD --;
         }
-        
+        portfolio.Payout();
         dayEndScreen.SetActive(false);
     }
 }
