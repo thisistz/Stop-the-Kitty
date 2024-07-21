@@ -44,10 +44,10 @@ public class GeminiLLM : MonoBehaviour
 
 
                 var responseBody = await response.Content.ReadAsStringAsync();
-                Debug.Log("Response: " + responseBody);
+                //Debug.Log("Response: " + responseBody);
                 var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(responseBody);
-                Debug.Log("Headline: " + apiResponse.headline);
-                Debug.Log("Sentiment Score: " + apiResponse.sentiment_score);
+                //Debug.Log("Headline: " + apiResponse.headline);
+                //Debug.Log("Sentiment Score: " + apiResponse.sentiment_score);
                 Post post = new Post(apiResponse.headline, float.Parse(apiResponse.sentiment_score));
                 return post;
             }

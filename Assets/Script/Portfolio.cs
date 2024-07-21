@@ -23,10 +23,10 @@ public class Portfolio : MonoBehaviour
         new Shorts(50000000, 1.69f),
         new Shorts(50000000, 1.69f),};
     public Transform shortLog;
-    public GameObject prefab;
+    public GameObject prefab, winScreen, loseScreen;
     public float dividendRatio = 0.1f, shortInterestRatio = 0.1f;
 
-    public TMP_Text t_buyPower, t_shortedStocks, t_ownedStocks, t_shortEstimate, t_buyEstimate, t_PR, t_endScreen;
+    public TMP_Text t_buyPower, t_shortedStocks, t_ownedStocks, t_shortEstimate, t_buyEstimate, t_PR, t_endScreen, t_loseMsg;
     public TMP_InputField t_buyAmount, t_shortedAmount;
 
     int pricePR = 5000000;
@@ -91,6 +91,8 @@ public class Portfolio : MonoBehaviour
         shortAmount = 0;
         t_shortedStocks.text = Math.Round(shortedShares, 6).ToString("N") + " shares";
         }
+
+        CheckWin();
     }
     public void BuyStocks(){
         if (buyPower >= buyAmount * stocks.price)
@@ -158,9 +160,35 @@ public class Portfolio : MonoBehaviour
 
     public void Payout(){
         float dividendPay = ownedShares * stocks.price * dividendRatio;
-        float shortInterest = shortedShares * stocks.price * shortInterestRatio;
-
+        float shortInterest = 0f;
+        ///
+        foreach(Shorts shorts in shortList){
+            shortInterest += shorts.amount * shorts.shortPrice * shortInterestRatio;
+        }
+        ///
         buyPower += dividendPay;
-        buyPower -= shortInterest;
+        if(buyPower >= shortInterest){
+            buyPower -= shortInterest;
+        }
+        else{
+            Bankrupt();
+        }
+    }
+
+    void CheckWin(){
+        if(shortList.Count < 1){
+            stocks.paused = true;
+            winScreen.SetActive(true);
+        }
+    }
+
+    void Bankrupt(){
+        float debt = shortedShares * stocks.price - buyPower;
+        stocks.isBankrupt = true;
+        t_loseMsg.text = "Unfortunately, you've made some irrational descisions and directly led your investments into a big flop.\n\n" +
+                         "Your loss cost us " + debt.ToString("C2") + 
+                         "\nWe won't be needing you anymore.\n\n" +
+                         "Make sure to return your badge on your way out.";
+        loseScreen.SetActive(true);
     }
 }

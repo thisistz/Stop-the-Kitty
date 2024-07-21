@@ -16,13 +16,14 @@ public class Stocks : MonoBehaviour
     SocialMedia socialMedia;
     DailySystem dailySystem;
     List<Post> postRef = new List<Post>();
-    public bool paused = true;
+    public bool paused = true, isBankrupt = false;
     // Start is called before the first frame update
     void Start()
     {
         socialMedia = (SocialMedia)FindObjectOfType(typeof(SocialMedia));
         dailySystem = (DailySystem)FindObjectOfType(typeof(DailySystem));
         paused = true;
+        isBankrupt = false;
     }
 
     // Update is called once per frame
@@ -37,31 +38,36 @@ public class Stocks : MonoBehaviour
         if (marketTime < 1560.0f){
             if (period > 4.0f) //every 4 seconds = 1 minute in real world. stock market opens 390 minutes every day
             {
-                postRef = socialMedia.GetPosts();
-                float logShort = 0;
-                if(postRef.Count >0)
-                    priceJump = (postRef[postRef.Count -1].sentiment)/2;
-                stockPrices.Add(price);
-                float probabilty = 0;
-                if(priceJump < 0){
-                    probabilty = UnityEngine.Random.Range(1.5f * priceJump, -priceJump/1.2f);
+                if(isBankrupt){
+                    price += UnityEngine.Random.Range(0.3f, 5.0f);
                 }
                 else{
-                    probabilty = UnityEngine.Random.Range(-priceJump/1.2f, priceJump);
-                }
+                    postRef = socialMedia.GetPosts();
+                    float logShort = 0;
+                    if(postRef.Count >0)
+                        priceJump = (postRef[postRef.Count -1].sentiment)/2;
+                    stockPrices.Add(price);
+                    float probabilty = 0;
+                    if(priceJump < 0){
+                        probabilty = UnityEngine.Random.Range(1.5f * priceJump, -priceJump/1.2f);
+                    }
+                    else{
+                        probabilty = UnityEngine.Random.Range(-priceJump/1.2f, priceJump);
+                    }
 
-                if(shortInfluencePeriod > 20.0f){
-                    shortInfluence = 0f;
-                    shortInfluencePeriod = 0;
-                }
-                if(shortInfluence > 0) {
-                    logShort = - Mathf.Log(Mathf.Abs(price * shortInfluence + 1), 1/20);
-                }
-                else{
-                    logShort = Mathf.Log(Mathf.Abs(price * shortInfluence + 1), 1/20);
-                }
+                    if(shortInfluencePeriod > 20.0f){
+                        shortInfluence = 0f;
+                        shortInfluencePeriod = 0;
+                    }
+                    if(shortInfluence > 0) {
+                        logShort = - Mathf.Log(Mathf.Abs(price * shortInfluence + 1), 1/20);
+                    }
+                    else{
+                        logShort = Mathf.Log(Mathf.Abs(price * shortInfluence + 1), 1/20);
+                    }
 
-                price += 10 * probabilty * probabilty * probabilty + logShort;
+                    price += 10 * probabilty * probabilty * probabilty + logShort;
+                }
                 price = Mathf.Max(price, 0.01f);
                 price = (float)Math.Round(price, 2);
                 t_stockPrice.text = price.ToString("C");

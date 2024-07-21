@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class DailySystem : MonoBehaviour
 {
@@ -73,5 +74,9 @@ public class DailySystem : MonoBehaviour
         portfolio.OrganizeShortLog();
         portfolio.Payout();
         dayEndScreen.SetActive(false);
+    }
+
+    public void Restart(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
