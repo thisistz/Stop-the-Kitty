@@ -30,6 +30,7 @@ public class Portfolio : MonoBehaviour
     public TMP_InputField t_buyAmount, t_shortedAmount;
 
     int pricePR = 5000000;
+    float shortInterest = 0f;
     Stocks stocks;
     GeminiLLM llm;
     // Start is called before the first frame update
@@ -149,7 +150,11 @@ public class Portfolio : MonoBehaviour
 
     public void CalcPayout(){
         float dividendPay = ownedShares * stocks.price * dividendRatio;
-        float shortInterest = shortedShares * stocks.price * shortInterestRatio;
+        shortInterest = 0f;
+        foreach(Shorts shorts in shortList){
+            shortInterest += shorts.amount * shorts.shortPrice * shortInterestRatio;
+        }
+
         t_endScreen.text = 
                             "You shorted: " + shortedShares.ToString("N") + " shares" + "\n" +
                             "You bought: " + ownedShares.ToString("N") + " shares" + "\n\n" +
@@ -160,12 +165,6 @@ public class Portfolio : MonoBehaviour
 
     public void Payout(){
         float dividendPay = ownedShares * stocks.price * dividendRatio;
-        float shortInterest = 0f;
-        ///
-        foreach(Shorts shorts in shortList){
-            shortInterest += shorts.amount * shorts.shortPrice * shortInterestRatio;
-        }
-        ///
         buyPower += dividendPay;
         if(buyPower >= shortInterest){
             buyPower -= shortInterest;

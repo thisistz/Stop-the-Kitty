@@ -33,7 +33,7 @@ public class GeminiLLM : MonoBehaviour
                 formData.Add(new StringContent(prompt), "prompt");
 
                 string imagePath = Application.dataPath + "/ScreenshotSave.png";
-                byte[] imageBytes = File.ReadAllBytes(imagePath);
+                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
                 if(imageBytes!= null){
                     string base64Image = Convert.ToBase64String(imageBytes);
                     formData.Add(new StringContent(base64Image), "image");
